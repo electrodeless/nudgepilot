@@ -22,6 +22,16 @@
             <p class="brand__subtitle">本地主动型陪伴助手</p>
           </div>
         </div>
+        <div class="sidebar__controls">
+          <button
+            class="sidebar__collapse"
+            data-action="collapse-sidebar"
+            aria-expanded="true"
+            aria-label="折叠导航栏"
+          >
+            <span class="sidebar__collapse-icon" aria-hidden="true">⟨</span>
+          </button>
+        </div>
         <nav class="nav" role="navigation">
           <button class="nav__item is-active" data-nav-target="chat" aria-pressed="true">
             <span class="nav__icon" aria-hidden="true">💬</span>
@@ -67,7 +77,17 @@
                 <div class="status-pill status-pill--listening" role="status">正在聆听</div>
                 <div class="status-pill status-pill--thinking" role="status">思考中</div>
                 <div class="status-pill status-pill--offline" role="status">离线备用</div>
+                <div class="status-pill status-pill--background" data-background-status hidden>
+                  后台监听中
+                </div>
               </div>
+              <button
+                class="secondary"
+                data-action="toggle-background-mode"
+                aria-pressed="false"
+              >
+                <span aria-hidden="true">🎧</span> 后台静默聆听
+              </button>
               <button class="primary" data-action="open-learning">查看学习动态</button>
             </div>
           </header>
@@ -166,8 +186,8 @@
               </ol>
               <footer class="composer" aria-label="输入区">
                 <div class="composer__status">
-                  <span class="status-dot status-dot--listening" aria-hidden="true"></span>
-                  麦克风已准备就绪
+                  <span class="status-dot status-dot--muted" aria-hidden="true" data-composer-dot></span>
+                  <span data-composer-message>麦克风已准备就绪</span>
                 </div>
                 <div class="composer__controls">
                   <button class="secondary" data-action="toggle-mic" aria-pressed="false">
@@ -225,10 +245,31 @@
                   <span class="field__label">桌面通知</span>
                   <div class="toggle" role="switch" aria-checked="true" tabindex="0">已开启</div>
                 </label>
-                <label class="field">
-                  <span class="field__label">自动唤醒热词</span>
-                  <div class="toggle" role="switch" aria-checked="false" tabindex="0">未开启</div>
-                </label>
+                <div class="field field--hotword">
+                  <div class="field__header">
+                    <span class="field__label">自动唤醒热词</span>
+                    <div
+                      class="toggle"
+                      role="switch"
+                      aria-checked="false"
+                      tabindex="0"
+                      data-hotword-toggle
+                    >
+                      未开启
+                    </div>
+                  </div>
+                  <div class="field__inline">
+                    <label class="field__inline-label" for="hotword-input">唤醒词</label>
+                    <input
+                      id="hotword-input"
+                      type="text"
+                      placeholder="例如：‘你好，Ni’"
+                      value="你好，Ni"
+                      data-hotword-input
+                    />
+                  </div>
+                  <p class="field__hint">设置在后台聆听时触发唤醒的语音短语。</p>
+                </div>
               </div>
               <section class="card">
                 <header class="card__header">
@@ -242,6 +283,54 @@
                     <li><label><input type="checkbox" /> 离线降级提示</label></li>
                     <li><label><input type="checkbox" checked /> 情绪识别横幅</label></li>
                   </ul>
+                </div>
+              </section>
+              <section class="card card--grid">
+                <header class="card__header">
+                  <h4>API 管理</h4>
+                  <p>配置外部服务调用的密钥、速率限制以及备用策略。</p>
+                </header>
+                <div class="card__body card__body--columns">
+                  <article class="media-card">
+                    <header>
+                      <h5>语音合成 Web API</h5>
+                      <span class="tag">在线备用</span>
+                    </header>
+                    <p>在本地语音不可用时调用，支持速率限制与代理配置。</p>
+                    <button class="ghost" data-action="configure-voice-api">管理密钥</button>
+                  </article>
+                  <article class="media-card">
+                    <header>
+                      <h5>认知服务 API</h5>
+                      <span class="tag tag--warning">需加密存储</span>
+                    </header>
+                    <p>用于复杂意图识别或长文本总结，支持地域路由。</p>
+                    <button class="ghost" data-action="configure-cognitive-api">配置策略</button>
+                  </article>
+                </div>
+              </section>
+              <section class="card card--grid">
+                <header class="card__header">
+                  <h4>模型管理</h4>
+                  <p>预留本地模型的安装、更新与资源监控入口。</p>
+                </header>
+                <div class="card__body card__body--columns">
+                  <article class="media-card">
+                    <header>
+                      <h5>意图识别模型仓库</h5>
+                      <span class="tag tag--calm">本地优先</span>
+                    </header>
+                    <p>查看版本、显存占用与自动更新计划。</p>
+                    <button class="ghost" data-action="open-model-store">打开管理器</button>
+                  </article>
+                  <article class="media-card">
+                    <header>
+                      <h5>向量数据库</h5>
+                      <span class="tag">运行中</span>
+                    </header>
+                    <p>监控嵌入同步、索引重建与备份调度。</p>
+                    <button class="ghost" data-action="open-vector-monitor">查看状态</button>
+                  </article>
                 </div>
               </section>
             </section>

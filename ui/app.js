@@ -213,20 +213,55 @@ tabs.forEach((tab) => {
 const themeToggle = document.querySelector('[data-action="toggle-theme"]');
 
 if (themeToggle) {
+  themeToggle.setAttribute('aria-pressed', String(document.body.classList.contains('theme-dark')));
   themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('theme-dark');
     const isDark = document.body.classList.contains('theme-dark');
-    document.documentElement.style.setProperty('--color-bg', isDark ? '#10172a' : '#f6f7fb');
-    document.documentElement.style.setProperty('--color-bg-alt', isDark ? '#141c2f' : '#ffffff');
-    document.documentElement.style.setProperty(
-      '--color-text',
-      isDark ? 'rgba(255,255,255,0.92)' : '#1d2433'
-    );
-    document.documentElement.style.setProperty(
-      '--color-text-muted',
-      isDark ? 'rgba(226,232,240,0.7)' : '#5b6578'
-    );
+    themeToggle.setAttribute('aria-pressed', String(isDark));
     themeToggle.innerHTML = isDark ? '<span aria-hidden="true">☀️</span> 主题切换' : '<span aria-hidden="true">🌗</span> 主题切换';
+    showToast(isDark ? '深色模式已启用，夜间使用更舒适。' : '已切换回浅色模式。', 'info');
+  });
+}
+
+const appShell = document.querySelector('.app-shell');
+const sidebarToggle = document.querySelector('[data-action="collapse-sidebar"]');
+
+if (appShell && sidebarToggle) {
+  sidebarToggle.addEventListener('click', () => {
+    const isCollapsed = appShell.classList.toggle('is-sidebar-collapsed');
+    sidebarToggle.setAttribute('aria-expanded', String(!isCollapsed));
+    sidebarToggle.setAttribute('aria-label', isCollapsed ? '展开导航栏' : '折叠导航栏');
+    showToast(isCollapsed ? '导航栏已收起，可集中于主要内容。' : '导航栏已展开。', 'info');
+  });
+}
+
+const backgroundToggle = document.querySelector('[data-action="toggle-background-mode"]');
+const backgroundStatus = document.querySelector('[data-background-status]');
+const composerMessage = document.querySelector('[data-composer-message]');
+const composerDot = document.querySelector('[data-composer-dot]');
+const defaultComposerMessage = composerMessage?.textContent.trim() ?? '';
+
+if (backgroundToggle && backgroundStatus) {
+  backgroundToggle.addEventListener('click', () => {
+    const willActivate = backgroundToggle.getAttribute('aria-pressed') !== 'true';
+    backgroundToggle.setAttribute('aria-pressed', String(willActivate));
+    backgroundToggle.innerHTML = willActivate
+      ? '<span aria-hidden="true">🛑</span> 退出后台监听'
+      : '<span aria-hidden="true">🎧</span> 后台静默聆听';
+
+    backgroundStatus.hidden = !willActivate;
+    if (composerMessage) {
+      composerMessage.textContent = willActivate ? '后台静默聆听已开启，等待唤醒词。' : defaultComposerMessage;
+    }
+    if (composerDot) {
+      composerDot.classList.toggle('status-dot--listening', willActivate);
+      composerDot.classList.toggle('status-dot--muted', !willActivate);
+    }
+
+    showToast(
+      willActivate ? '后台静默聆听已开启，将在唤醒词后自动响应。' : '已退出后台静默聆听模式。',
+      willActivate ? 'success' : 'info'
+    );
   });
 }
 
@@ -253,6 +288,33 @@ toggles.forEach((toggle) => {
     }
   });
 });
+
+const hotwordToggle = document.querySelector('[data-hotword-toggle]');
+const hotwordInput = document.querySelector('[data-hotword-input]');
+
+if (hotwordToggle && hotwordInput) {
+  const syncHotwordState = () => {
+    const enabled = hotwordToggle.getAttribute('aria-checked') === 'true';
+    hotwordInput.disabled = !enabled;
+    hotwordInput.placeholder = enabled ? '例如：‘你好，Ni’' : '启用后可编辑唤醒词';
+    hotwordInput.setAttribute('aria-disabled', String(!enabled));
+  };
+
+  syncHotwordState();
+
+  hotwordToggle.addEventListener('click', () => {
+    syncHotwordState();
+    const enabled = hotwordToggle.getAttribute('aria-checked') === 'true';
+    showToast(
+      enabled ? `自动唤醒已开启，当前热词为「${hotwordInput.value || '未设置'}」。` : '自动唤醒已关闭。',
+      enabled ? 'success' : 'info'
+    );
+    if (enabled) {
+      hotwordInput.focus();
+      hotwordInput.select();
+    }
+  });
+}
 
 const openLearningShortcut = document.querySelector('[data-action="open-learning"]');
 
