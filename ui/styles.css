@@ -62,6 +62,7 @@ button {
 }
 
 .sidebar {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -72,8 +73,16 @@ button {
 }
 
 .sidebar__controls {
+  position: absolute;
+  top: 50%;
+  right: -20px;
+  transform: translateY(-50%);
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  z-index: 3;
 }
 
 .sidebar__collapse {
@@ -86,6 +95,7 @@ button {
   background: var(--color-bg-strong);
   color: var(--color-text-muted);
   transition: background 0.2s, color 0.2s;
+  box-shadow: var(--shadow-sm);
 }
 
 .sidebar__collapse:hover,
@@ -621,8 +631,7 @@ body.theme-dark .composer__status {
 }
 
 .app-shell.is-sidebar-collapsed .sidebar__controls {
-  justify-content: center;
-  width: 100%;
+  right: -20px;
 }
 
 .app-shell.is-sidebar-collapsed .sidebar__collapse-icon {
