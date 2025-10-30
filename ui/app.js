@@ -14,6 +14,7 @@ const attachmentsContainer = document.querySelector('[data-attachments]');
 const toastRegion = document.querySelector('.toast-region');
 const contentCards = document.querySelectorAll('.content-card');
 const pinnedItems = new Set();
+const desktopBridge = window.nudgepilotDesktop ?? null;
 let attachmentSeed = 0;
 
 function setActivePage(target) {
@@ -240,28 +241,101 @@ const backgroundStatus = document.querySelector('[data-background-status]');
 const composerMessage = document.querySelector('[data-composer-message]');
 const composerDot = document.querySelector('[data-composer-dot]');
 const defaultComposerMessage = composerMessage?.textContent.trim() ?? '';
+let backgroundListeningState = backgroundToggle?.getAttribute('aria-pressed') === 'true';
+
+const applyBackgroundListeningState = (isActive, { silent = false } = {}) => {
+  backgroundListeningState = Boolean(isActive);
+
+  if (backgroundToggle) {
+    backgroundToggle.setAttribute('aria-pressed', String(backgroundListeningState));
+    backgroundToggle.innerHTML = backgroundListeningState
+      ? '<span aria-hidden="true">🛑</span> 退出后台监听'
+      : '<span aria-hidden="true">🎧</span> 后台静默聆听';
+  }
+
+  if (backgroundStatus) {
+    backgroundStatus.hidden = !backgroundListeningState;
+  }
+
+  if (composerMessage) {
+    composerMessage.textContent = backgroundListeningState
+      ? '后台静默聆听已开启，等待唤醒词。'
+      : defaultComposerMessage;
+  }
+
+  if (composerDot) {
+    composerDot.classList.toggle('status-dot--listening', backgroundListeningState);
+    composerDot.classList.toggle('status-dot--muted', !backgroundListeningState);
+  }
+
+  if (!silent) {
+    showToast(
+      backgroundListeningState
+        ? '后台静默聆听已开启，将在唤醒词后自动响应。'
+        : '已退出后台静默聆听模式。',
+      backgroundListeningState ? 'success' : 'info'
+    );
+  }
+};
+
+const updateBackgroundListening = async (targetState) => {
+  const desired = Boolean(targetState);
+
+  if (!desktopBridge?.setBackgroundListening) {
+    applyBackgroundListeningState(desired);
+    return;
+  }
+
+  try {
+    await desktopBridge.setBackgroundListening(desired);
+    applyBackgroundListeningState(desired, { silent: true });
+  } catch (error) {
+    console.error('Failed to toggle background listening', error);
+    showToast('切换后台监听失败，请稍后重试。', 'warning');
+  }
+};
 
 if (backgroundToggle && backgroundStatus) {
   backgroundToggle.addEventListener('click', () => {
-    const willActivate = backgroundToggle.getAttribute('aria-pressed') !== 'true';
-    backgroundToggle.setAttribute('aria-pressed', String(willActivate));
-    backgroundToggle.innerHTML = willActivate
-      ? '<span aria-hidden="true">🛑</span> 退出后台监听'
-      : '<span aria-hidden="true">🎧</span> 后台静默聆听';
+    updateBackgroundListening(!backgroundListeningState);
+  });
 
-    backgroundStatus.hidden = !willActivate;
-    if (composerMessage) {
-      composerMessage.textContent = willActivate ? '后台静默聆听已开启，等待唤醒词。' : defaultComposerMessage;
-    }
-    if (composerDot) {
-      composerDot.classList.toggle('status-dot--listening', willActivate);
-      composerDot.classList.toggle('status-dot--muted', !willActivate);
+  if (desktopBridge?.getBackgroundListening) {
+    desktopBridge
+      .getBackgroundListening()
+      .then((isActive) => {
+        applyBackgroundListeningState(Boolean(isActive), { silent: true });
+      })
+      .catch((error) => {
+        console.error('Unable to read background listening state', error);
+      });
+  }
+
+  if (desktopBridge?.onBackgroundListeningChange) {
+    desktopBridge.onBackgroundListeningChange((payload) => {
+      const nextState = typeof payload?.active === 'boolean' ? payload.active : Boolean(payload);
+      const silent = Boolean(payload?.silent);
+      applyBackgroundListeningState(nextState, { silent });
+    });
+  }
+}
+
+const minimizeToTrayButton = document.querySelector('[data-action="minimize-to-tray"]');
+
+if (minimizeToTrayButton) {
+  minimizeToTrayButton.addEventListener('click', async () => {
+    if (!desktopBridge?.minimizeToTray) {
+      showToast('挂起到托盘仅在桌面客户端可用。', 'warning');
+      return;
     }
 
-    showToast(
-      willActivate ? '后台静默聆听已开启，将在唤醒词后自动响应。' : '已退出后台静默聆听模式。',
-      willActivate ? 'success' : 'info'
-    );
+    try {
+      await desktopBridge.minimizeToTray();
+      showToast('界面已挂起到系统托盘，后台仍在等待唤醒。', 'info');
+    } catch (error) {
+      console.error('Failed to minimise to tray', error);
+      showToast('挂起到托盘失败，请稍后再试。', 'warning');
+    }
   });
 }
 
@@ -722,3 +796,5 @@ pinChatButtons.forEach((button) => {
 // 默认展示主界面与通用设置
 setActivePage('chat');
 setActiveTab('general');
+
+
