@@ -2,8 +2,8 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NudgePilot 桌面客户端界面原型</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NudgePilot 桌面客户端交互草图</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,777 +13,326 @@
     />
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="sidebar" aria-label="主导航">
-        <div class="brand">
-          <img src="../产品logo.png" alt="NudgePilot logo" class="brand__logo" />
-          <div>
-            <h1 class="brand__title">NudgePilot</h1>
-            <p class="brand__subtitle">本地主动型陪伴助手</p>
+    <div class="window" data-shell>
+      <header class="titlebar" aria-label="应用窗口标题栏">
+        <div class="titlebar__brand">
+          <img src="../产品logo.png" alt="NudgePilot 标识" class="titlebar__logo" />
+          <div class="titlebar__meta">
+            <strong>NudgePilot</strong>
+            <span>主动陪伴桌面助手 · 交互骨架</span>
           </div>
         </div>
-        <div class="sidebar__controls">
+        <div class="titlebar__actions">
+          <button class="ghost" data-action="toggle-theme" aria-label="切换主题">🌗</button>
+          <button class="ghost" data-action="show-shortcuts">⌨️</button>
+          <div class="titlebar__window-controls" role="group" aria-label="窗口控制">
+            <button aria-label="最小化" class="ghost ghost--win">—</button>
+            <button aria-label="最大化" class="ghost ghost--win">▢</button>
+            <button aria-label="关闭" class="ghost ghost--win ghost--danger">✕</button>
+          </div>
+        </div>
+      </header>
+
+      <div class="app">
+        <aside class="sidebar" aria-label="主导航">
           <button
             class="sidebar__collapse"
             data-action="collapse-sidebar"
             aria-expanded="true"
             aria-label="折叠导航栏"
           >
-            <span class="sidebar__collapse-icon" aria-hidden="true">⟨</span>
+            <span aria-hidden="true">⟨</span>
           </button>
-        </div>
-        <nav class="nav" role="navigation">
-          <button class="nav__item is-active" data-nav-target="chat" aria-pressed="true">
-            <span class="nav__icon" aria-hidden="true">💬</span>
-            <span class="nav__label">主界面</span>
-          </button>
-          <button class="nav__item" data-nav-target="settings" aria-pressed="false">
-            <span class="nav__icon" aria-hidden="true">⚙️</span>
-            <span class="nav__label">设置</span>
-          </button>
-          <button class="nav__item" data-nav-target="learning" aria-pressed="false">
-            <span class="nav__icon" aria-hidden="true">🧠</span>
-            <span class="nav__label">持续学习</span>
-          </button>
-          <button class="nav__item" data-nav-target="content" aria-pressed="false">
-            <span class="nav__icon" aria-hidden="true">🗂️</span>
-            <span class="nav__label">内容展示</span>
-          </button>
-          <button class="nav__item" data-nav-target="tray" aria-pressed="false">
-            <span class="nav__icon" aria-hidden="true">🪟</span>
-            <span class="nav__label">托盘菜单</span>
-          </button>
-        </nav>
-        <footer class="sidebar__footer">
-          <div class="status-chip status-chip--online">
-            <span class="status-dot" aria-hidden="true"></span>
-            在线模式
-          </div>
-          <button class="secondary" data-action="toggle-theme" aria-label="切换浅色/深色模式">
-            <span aria-hidden="true">🌗</span> 主题切换
-          </button>
-        </footer>
-      </aside>
 
-      <main class="workspace" id="workspace" tabindex="-1">
-        <section class="page is-active" data-page="chat" aria-labelledby="chat-title">
-          <header class="page__header">
-            <div>
-              <h2 id="chat-title">主界面对话</h2>
-              <p class="page__subtitle">与 Ni 保持对话，查看系统状态和快速动作</p>
-            </div>
-            <div class="header-controls">
-              <div class="status-stack">
-                <div class="status-pill status-pill--listening" role="status">正在聆听</div>
-                <div class="status-pill status-pill--thinking" role="status">思考中</div>
-                <div class="status-pill status-pill--offline" role="status">离线备用</div>
-                <div class="status-pill status-pill--background" data-background-status hidden>
-                  后台监听中
-                </div>
-              </div>
-              <button
-                class="secondary"
-                data-action="toggle-background-mode"
-                aria-pressed="false"
-              >
-                <span aria-hidden="true">🎧</span> 后台静默聆听
-              </button>
-              <button class="ghost" data-action="minimize-to-tray">
-                <span aria-hidden="true">📥</span> 挂起到托盘
-              </button>
-              <button class="primary" data-action="open-learning">查看学习动态</button>
-            </div>
-          </header>
-          <div class="chat-layout">
-            <aside class="context-panel" aria-label="情境面板">
-              <section class="panel-card">
-                <h3 class="panel-card__title">快捷任务</h3>
-                <ul class="quick-actions">
-                  <li><button class="quick-action">记录待办</button></li>
-                  <li><button class="quick-action">创建提醒</button></li>
-                  <li><button class="quick-action">打开常用应用</button></li>
-                  <li><button class="quick-action">开始专注模式</button></li>
-                </ul>
-              </section>
-              <section class="panel-card">
-                <h3 class="panel-card__title">联网状态</h3>
-                <div class="network-status">
-                  <div>
-                    <span class="status-dot status-dot--strong" aria-hidden="true"></span>
-                    云端服务可用
-                  </div>
-                  <p class="panel-card__hint">切换离线模式将在设置中完成</p>
-                </div>
-              </section>
-              <section class="panel-card">
-                <h3 class="panel-card__title">情绪识别</h3>
-                <div class="emotion-meter">
-                  <span class="emotion-meter__label">检测到的情绪</span>
-                  <div class="emotion-meter__bar">
-                    <span class="emotion-meter__fill" style="width: 65%"></span>
-                  </div>
-                  <p class="panel-card__hint">当前倾向：轻微疲惫，建议柔和回应</p>
-                </div>
-              </section>
-              <section class="panel-card panel-card--pinned">
-                <h3 class="panel-card__title">固定内容</h3>
-                <ul class="pinned-list" data-pinned-list>
-                  <li class="pinned-empty">还没有固定的内容</li>
-                </ul>
-              </section>
-            </aside>
-            <div class="chat-panel" aria-live="polite">
-              <ol class="message-list">
-                <li class="message message--user">
-                  <div class="message__avatar" aria-hidden="true">👤</div>
-                  <div class="message__bubble">
-                    <header class="message__meta">
-                      <span class="message__author">你</span>
-                      <time class="message__time">09:36</time>
-                    </header>
-                    <p>Ni，帮我看看今天的日程，并提醒我下午3点的会议。</p>
-                  </div>
-                </li>
-                <li class="message message--assistant">
-                  <div class="message__avatar" aria-hidden="true">🤖</div>
-                  <div class="message__bubble">
-                    <header class="message__meta">
-                      <span class="message__author">Ni</span>
-                      <time class="message__time">09:36</time>
-                    </header>
-                    <p>
-                      好的，我已同步你的日程并标记了下午 3 点的团队会议。需要我为会前准备资料吗？
-                    </p>
-                    <footer class="message__footer">
-                      <button class="link" data-action="open-content">查看日程详情</button>
-                      <span class="message__source">来源：本地日历</span>
-                    </footer>
-                  </div>
-                </li>
-                <li class="message message--assistant message--rich">
-                  <div class="message__avatar" aria-hidden="true">🤖</div>
-                  <div class="message__bubble">
-                    <header class="message__meta">
-                      <span class="message__author">Ni</span>
-                      <time class="message__time">09:38</time>
-                    </header>
-                    <p>这是你今天的专注任务建议：</p>
-                    <div class="rich-card">
-                      <h4>专注清单</h4>
-                      <ul>
-                        <li>上午：整理项目规划草稿</li>
-                        <li>下午：准备季度汇报</li>
-                        <li>晚上：舒缓练习 20 分钟</li>
-                      </ul>
-                      <button
-                        class="primary"
-                        data-action="pin-content"
-                        data-pin-label="专注清单"
-                        data-pin-summary="包含今日重点任务与放松建议"
-                      >
-                        固定到侧栏
-                      </button>
-                    </div>
-                  </div>
-                </li>
-              </ol>
-              <footer class="composer" aria-label="输入区">
-                <div class="composer__status">
-                  <span class="status-dot status-dot--muted" aria-hidden="true" data-composer-dot></span>
-                  <span data-composer-message>麦克风已准备就绪</span>
-                </div>
-                <div class="composer__controls">
-                  <button class="secondary" data-action="toggle-mic" aria-pressed="false">
-                    <span aria-hidden="true">🎙️</span> 语音输入
-                  </button>
-                  <label class="composer__input" aria-label="文本输入">
-                    <textarea rows="2" placeholder="输入内容或按住语音键说话…"></textarea>
-                  </label>
-                  <div class="composer__actions">
-                    <button class="ghost" data-action="insert-attachment" aria-label="添加附件">📎</button>
-                    <button class="ghost" data-action="insert-command" aria-label="插入快捷指令">⌘</button>
-                    <button class="primary" data-action="send-message" aria-label="发送">
-                      发送
-                    </button>
-                  </div>
-                </div>
-                <div class="composer__attachments" data-attachments aria-live="polite"></div>
-              </footer>
-            </div>
-          </div>
-        </section>
+          <nav class="sidebar__nav" data-nav role="navigation" aria-label="页面切换">
+            <button class="nav-item is-active" data-nav-target="overview" aria-pressed="true">
+              <span class="nav-item__icon">🏠</span>
+              <span class="nav-item__label">驾驶舱</span>
+            </button>
+            <button class="nav-item" data-nav-target="chat" aria-pressed="false">
+              <span class="nav-item__icon">💬</span>
+              <span class="nav-item__label">聊天主界面</span>
+            </button>
+            <button class="nav-item" data-nav-target="learning" aria-pressed="false">
+              <span class="nav-item__icon">🧠</span>
+              <span class="nav-item__label">本地学习</span>
+            </button>
+            <button class="nav-item" data-nav-target="content" aria-pressed="false">
+              <span class="nav-item__icon">🗂️</span>
+              <span class="nav-item__label">内容展示</span>
+            </button>
+            <button class="nav-item" data-nav-target="settings" aria-pressed="false">
+              <span class="nav-item__icon">⚙️</span>
+              <span class="nav-item__label">设置中心</span>
+            </button>
+          </nav>
 
-        <section class="page" data-page="settings" aria-labelledby="settings-title">
-          <header class="page__header">
-            <div>
-              <h2 id="settings-title">系统设置</h2>
-              <p class="page__subtitle">配置语音、联网策略、意图判断及持续学习参数</p>
+          <footer class="sidebar__footer">
+            <button class="chip chip--ghost" data-action="toggle-background">
+              <span class="chip__dot" aria-hidden="true"></span>
+              <span data-background-indicator>后台待命</span>
+            </button>
+            <button class="chip chip--primary" data-action="show-toast">测试提醒</button>
+          </footer>
+        </aside>
+
+        <main class="workspace" id="workspace" tabindex="-1">
+          <header class="workspace__header">
+            <div class="workspace__headline">
+              <h1 id="workspace-title">驾驶舱概览</h1>
+              <p id="workspace-desc">聚合关键指标与入口，方便验证整体跳转逻辑。</p>
             </div>
-            <div class="header-controls">
-              <div class="tag">配置即时生效</div>
-              <button class="ghost" data-action="reset-settings">恢复默认</button>
+            <div class="workspace__actions">
+              <button class="primary" data-action="open-learning">查看本地学习流</button>
+              <button class="ghost" data-open-dialog="journey">系统工作流</button>
             </div>
           </header>
 
-          <div class="tabs" role="tablist" aria-label="设置分类">
-            <button class="tab is-active" role="tab" aria-selected="true" data-tab="general">通用</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="voice">语音与情绪</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="intent">意图识别</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="privacy">隐私与网络</button>
-          </div>
-
-          <div class="tab-panels">
-            <section class="tab-panel is-active" data-tab-panel="general" role="tabpanel">
-              <h3>界面与体验</h3>
-              <div class="form-grid">
-                <label class="field">
-                  <span class="field__label">界面主题</span>
-                  <select>
-                    <option>跟随系统</option>
-                    <option>浅色模式</option>
-                    <option>深色模式</option>
-                  </select>
-                </label>
-                <label class="field">
-                  <span class="field__label">桌面通知</span>
-                  <div class="toggle" role="switch" aria-checked="true" tabindex="0">已开启</div>
-                </label>
-                <div class="field field--hotword">
-                  <div class="field__header">
-                    <span class="field__label">自动唤醒热词</span>
-                    <div
-                      class="toggle"
-                      role="switch"
-                      aria-checked="false"
-                      tabindex="0"
-                      data-hotword-toggle
-                    >
-                      未开启
-                    </div>
-                  </div>
-                  <div class="field__inline">
-                    <label class="field__inline-label" for="hotword-input">唤醒词</label>
-                    <input
-                      id="hotword-input"
-                      type="text"
-                      placeholder="例如：‘你好，Ni’"
-                      value="你好，Ni"
-                      data-hotword-input
-                    />
-                  </div>
-                  <p class="field__hint">设置在后台聆听时触发唤醒的语音短语。</p>
-                </div>
-              </div>
-              <section class="card">
-                <header class="card__header">
-                  <h4>状态提示元素</h4>
-                  <p>控制在主界面显示哪些状态提示，例如“聆听中”、“思考中”或“离线模式”。</p>
+          <section class="screen is-active" data-screen="overview" aria-labelledby="workspace-title">
+            <div class="overview-grid">
+              <article class="panel panel--wide">
+                <header class="panel__header">
+                  <h2>任务进展示意</h2>
+                  <button class="link" data-open-dialog="timeline">打开处理时间线</button>
                 </header>
-                <div class="card__body">
-                  <ul class="checklist">
-                    <li><label><input type="checkbox" checked /> 显示聆听动画</label></li>
-                    <li><label><input type="checkbox" checked /> 显示思考进度</label></li>
-                    <li><label><input type="checkbox" /> 离线降级提示</label></li>
-                    <li><label><input type="checkbox" checked /> 情绪识别横幅</label></li>
+                <div class="timeline" data-timeline>
+                  <div class="timeline__item">
+                    <span class="timeline__dot timeline__dot--accent"></span>
+                    <div>
+                      <h3>语音唤醒占位</h3>
+                      <p>捕获唤醒词、识别说话人后进入意图理解流程。</p>
+                    </div>
+                  </div>
+                  <div class="timeline__item">
+                    <span class="timeline__dot"></span>
+                    <div>
+                      <h3>意图判断草图</h3>
+                      <p>通过本地模型做初步分类，未命中时准备云端兜底。</p>
+                    </div>
+                  </div>
+                  <div class="timeline__item">
+                    <span class="timeline__dot"></span>
+                    <div>
+                      <h3>任务调度</h3>
+                      <p>映射到对应模块并准备生成响应，等待 UI 反馈。</p>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="panel">
+                <header class="panel__header">
+                  <h2>关键指标卡片</h2>
+                </header>
+                <ul class="stats">
+                  <li>
+                    <span class="stats__label">本地命中率</span>
+                    <strong class="stats__value">82%</strong>
+                    <small class="stats__hint">占位数字，仅用于布局</small>
+                  </li>
+                  <li>
+                    <span class="stats__label">今日触达</span>
+                    <strong class="stats__value">24 次</strong>
+                    <small class="stats__hint">点击可跳至聊天页</small>
+                  </li>
+                  <li>
+                    <span class="stats__label">后台任务</span>
+                    <strong class="stats__value">3 项</strong>
+                    <small class="stats__hint">待确认流程</small>
+                  </li>
+                </ul>
+              </article>
+
+              <article class="panel">
+                <header class="panel__header">
+                  <h2>快捷入口</h2>
+                </header>
+                <div class="quick-actions">
+                  <button class="quick-actions__item" data-nav-target="chat">
+                    <span>对话窗口</span>
+                    <small>跳转检查导航</small>
+                  </button>
+                  <button class="quick-actions__item" data-nav-target="content">
+                    <span>内容看板</span>
+                    <small>查看占位模块</small>
+                  </button>
+                  <button class="quick-actions__item" data-nav-target="settings">
+                    <span>系统设置</span>
+                    <small>模拟配置路径</small>
+                  </button>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="screen" data-screen="chat" aria-label="聊天主界面骨架">
+            <div class="surface surface--chat">
+              <div class="chat">
+                <header class="surface__header">
+                  <div>
+                    <h2>聊天主界面</h2>
+                    <p>左侧展示消息气泡，右侧为情境辅助区。</p>
+                  </div>
+                  <button class="ghost" data-open-dialog="chat-flow">查看流转</button>
+                </header>
+                <div class="chat__body">
+                  <ul class="chat-thread">
+                    <li class="chat-thread__item chat-thread__item--bot">
+                      <div class="chat-bubble">你好，我是 NudgePilot，目前处于骨架模式。</div>
+                      <time>09:21</time>
+                    </li>
+                    <li class="chat-thread__item chat-thread__item--user">
+                      <div class="chat-bubble">请示范一次提醒创建流程。</div>
+                      <time>09:22</time>
+                    </li>
+                    <li class="chat-thread__item chat-thread__item--bot">
+                      <div class="chat-bubble">稍后将跳转到右侧“行动建议”卡片。</div>
+                      <time>09:22</time>
+                    </li>
                   </ul>
                 </div>
-              </section>
-              <section class="card card--grid">
-                <header class="card__header">
-                  <h4>API 管理</h4>
-                  <p>配置外部服务调用的密钥、速率限制以及备用策略。</p>
-                </header>
-                <div class="card__body card__body--columns">
-                  <article class="media-card">
-                    <header>
-                      <h5>语音合成 Web API</h5>
-                      <span class="tag">在线备用</span>
-                    </header>
-                    <p>在本地语音不可用时调用，支持速率限制与代理配置。</p>
-                    <button class="ghost" data-action="configure-voice-api">管理密钥</button>
-                  </article>
-                  <article class="media-card">
-                    <header>
-                      <h5>认知服务 API</h5>
-                      <span class="tag tag--warning">需加密存储</span>
-                    </header>
-                    <p>用于复杂意图识别或长文本总结，支持地域路由。</p>
-                    <button class="ghost" data-action="configure-cognitive-api">配置策略</button>
-                  </article>
-                </div>
-              </section>
-              <section class="card card--grid">
-                <header class="card__header">
-                  <h4>模型管理</h4>
-                  <p>预留本地模型的安装、更新与资源监控入口。</p>
-                </header>
-                <div class="card__body card__body--columns">
-                  <article class="media-card">
-                    <header>
-                      <h5>意图识别模型仓库</h5>
-                      <span class="tag tag--calm">本地优先</span>
-                    </header>
-                    <p>查看版本、显存占用与自动更新计划。</p>
-                    <button class="ghost" data-action="open-model-store">打开管理器</button>
-                  </article>
-                  <article class="media-card">
-                    <header>
-                      <h5>向量数据库</h5>
-                      <span class="tag">运行中</span>
-                    </header>
-                    <p>监控嵌入同步、索引重建与备份调度。</p>
-                    <button class="ghost" data-action="open-vector-monitor">查看状态</button>
-                  </article>
-                </div>
-              </section>
-            </section>
-
-            <section class="tab-panel" data-tab-panel="voice" role="tabpanel" aria-hidden="true">
-              <h3>语音与情绪控制</h3>
-              <div class="form-grid form-grid--two">
-                <label class="field">
-                  <span class="field__label">首选语音引擎</span>
-                  <select>
-                    <option>CosyVoice 轻量本地（推荐）</option>
-                    <option>EmotiVoice（需GPU）</option>
-                    <option>Edge 在线服务</option>
-                  </select>
-                </label>
-                <label class="field">
-                  <span class="field__label">语音风格</span>
-                  <select>
-                    <option>柔和女声 · 温暖</option>
-                    <option>柔和女声 · 精力充沛</option>
-                    <option>柔和女声 · 冥想</option>
-                  </select>
-                </label>
-                <label class="field">
-                  <span class="field__label">情绪识别</span>
-                  <div class="toggle" role="switch" aria-checked="true" tabindex="0">已开启</div>
-                </label>
-                <label class="field">
-                  <span class="field__label">麦克风降噪</span>
-                  <div class="toggle" role="switch" aria-checked="true" tabindex="0">已开启</div>
-                </label>
+                <footer class="chat__composer">
+                  <div class="composer__field" aria-label="输入区占位"></div>
+                  <div class="composer__tools">
+                    <button class="ghost">🎙️</button>
+                    <button class="ghost">📎</button>
+                    <button class="primary">发送</button>
+                  </div>
+                </footer>
               </div>
-              <section class="card">
-                <header class="card__header">
-                  <h4>本地语音包</h4>
-                  <p>管理本地离线语音模型，控制存储体积与质量。</p>
-                </header>
-                <div class="card__body card__body--columns">
-                  <article class="media-card">
-                    <header>
-                      <h5>CosyVoice 0.5B</h5>
-                      <span class="tag">已安装 · 1.2GB</span>
-                    </header>
-                    <p>轻量高质量的中文语音，适合CPU实时合成。</p>
-                    <button class="ghost" data-action="manage-pack">管理</button>
-                  </article>
-                  <article class="media-card">
-                    <header>
-                      <h5>Edge TTS 连接</h5>
-                      <span class="tag tag--warning">联网备用</span>
-                    </header>
-                    <p>当本地资源不足时自动切换，需用户授权联网。</p>
-                    <button class="ghost" data-action="connect-cloud">配置</button>
-                  </article>
-                </div>
-              </section>
-            </section>
-
-            <section class="tab-panel" data-tab-panel="intent" role="tabpanel" aria-hidden="true">
-              <h3>意图识别与任务判断</h3>
-              <div class="intent-grid">
-                <section class="card">
-                  <header class="card__header">
-                    <h4>模型选择</h4>
-                    <p>为常规指令选择默认模型，可在离线时自动降级。</p>
+              <aside class="context">
+                <section class="context__card">
+                  <header>
+                    <h3>行动建议</h3>
+                    <span class="tag">占位</span>
                   </header>
-                  <div class="card__body">
-                    <label class="field">
-                      <span class="field__label">主模型</span>
-                      <select>
-                        <option>MiniLM-L6 · 本地</option>
-                        <option>DistilBERT · 本地</option>
-                        <option>FastText + 规则</option>
-                      </select>
-                    </label>
-                    <label class="field">
-                      <span class="field__label">降级策略</span>
-                      <select>
-                        <option>错误率 ≥ 30% 自动触发</option>
-                        <option>手动切换</option>
-                      </select>
-                    </label>
-                  </div>
+                  <ul class="context__list">
+                    <li>下一次会议 14:00，记得准备材料。</li>
+                    <li>检测到情绪偏低，建议播放舒缓音乐。</li>
+                    <li>可尝试开启后台监听，以便快速响应。</li>
+                  </ul>
+                  <button class="ghost" data-open-dialog="context">查看结构说明</button>
                 </section>
-                <section class="card">
-                  <header class="card__header">
-                    <h4>任务优先级</h4>
-                    <p>根据最近的使用记录动态调节任务排序。</p>
+                <section class="context__card">
+                  <header>
+                    <h3>多模态输入</h3>
                   </header>
-                  <div class="card__body">
-                    <ul class="priority-list">
-                      <li>
-                        <span>播放音乐</span>
-                        <div class="priority-bar"><span style="width: 80%"></span></div>
-                      </li>
-                      <li>
-                        <span>日程管理</span>
-                        <div class="priority-bar"><span style="width: 60%"></span></div>
-                      </li>
-                      <li>
-                        <span>信息检索</span>
-                        <div class="priority-bar"><span style="width: 45%"></span></div>
-                      </li>
-                    </ul>
-                  </div>
+                  <div class="placeholder placeholder--stack"></div>
                 </section>
-                <section class="card">
-                  <header class="card__header">
-                    <h4>关键词向量库</h4>
-                    <p>最近新增 12 条关键词，已同步到向量数据库。</p>
-                  </header>
-                  <div class="card__body">
-                    <div class="keyword-badges">
-                      <span class="badge">专注模式</span>
-                      <span class="badge">会议纪要</span>
-                      <span class="badge">待办列表</span>
-                      <span class="badge">呼吸练习</span>
-                    </div>
-                    <button class="ghost" data-action="view-keywords">查看全部</button>
-                  </div>
-                </section>
-              </div>
-            </section>
-
-            <section class="tab-panel" data-tab-panel="privacy" role="tabpanel" aria-hidden="true">
-              <h3>隐私、网络与存储</h3>
-              <div class="form-grid form-grid--two">
-                <label class="field">
-                  <span class="field__label">联网增强同步</span>
-                  <div class="toggle" role="switch" aria-checked="false" tabindex="0">未开启</div>
-                </label>
-                <label class="field">
-                  <span class="field__label">日志加密</span>
-                  <div class="toggle" role="switch" aria-checked="true" tabindex="0">已开启</div>
-                </label>
-                <label class="field">
-                  <span class="field__label">日志保存路径</span>
-                  <input type="text" value="~/Library/NudgePilot/logs" />
-                </label>
-                <label class="field">
-                  <span class="field__label">模型存储上限</span>
-                  <div class="slider">
-                    <input type="range" min="100" max="500" value="200" />
-                    <span>200 MB</span>
-                  </div>
-                </label>
-              </div>
-              <section class="card">
-                <header class="card__header">
-                  <h4>数据权限说明</h4>
-                  <p>用户可随时导出或清理本地数据，联网同步需再次授权。</p>
-                </header>
-                <div class="card__body">
-                  <button class="secondary">导出日志</button>
-                  <button class="ghost">清理本地数据</button>
-                </div>
-              </section>
-            </section>
-          </div>
-        </section>
-
-        <section class="page" data-page="learning" aria-labelledby="learning-title">
-          <header class="page__header">
-            <div>
-              <h2 id="learning-title">持续学习面板</h2>
-              <p class="page__subtitle">查看自适应优化的调度计划与训练日志</p>
+              </aside>
             </div>
-            <div class="header-controls">
-              <button class="primary" data-action="trigger-training">立即训练</button>
-              <span class="tag">冷却 45 分钟</span>
-            </div>
-          </header>
-          <div class="learning-layout">
-            <section class="card">
-              <header class="card__header">
-                <h3>学习调度</h3>
-                <p>当前策略：每 24 小时 + 错误率阈值触发</p>
-              </header>
-              <div class="card__body">
-                <dl class="definition-list">
-                  <div>
-                    <dt>上次训练</dt>
-                    <dd>今天 07:20 · 自动触发</dd>
-                  </div>
-                  <div>
-                    <dt>下次计划</dt>
-                    <dd>今晚 23:00 · 夜间空闲</dd>
-                  </div>
-                  <div>
-                    <dt>最近错误率</dt>
-                    <dd>意图误判 8% · 安全区间</dd>
-                  </div>
-                </dl>
-              </div>
-            </section>
-            <section class="card">
-              <header class="card__header">
-                <h3>训练进度</h3>
-                <p>训练执行时实时更新进度和耗时。</p>
-              </header>
-              <div class="card__body">
-                <div class="progress">
-                  <span class="progress__label">MiniLM 微调</span>
-                  <div class="progress__bar"><span style="width: 72%"></span></div>
-                </div>
-                <div class="progress">
-                  <span class="progress__label">关键词向量更新</span>
-                  <div class="progress__bar"><span style="width: 40%"></span></div>
-                </div>
-                <div class="alert alert--info">
-                  当前运行在离线模式，未启用云端增强。
-                </div>
-              </div>
-            </section>
-          </div>
-          <section class="card card--logs">
-            <header class="card__header">
-              <h3>学习记录</h3>
-              <div class="filters">
-                <label>
-                  时间范围
-                  <select>
-                    <option>最近 7 天</option>
-                    <option>最近 30 天</option>
-                    <option>全部</option>
-                  </select>
-                </label>
-                <label>
-                  类型
-                  <select>
-                    <option>全部类型</option>
-                    <option>自动触发</option>
-                    <option>手动触发</option>
-                  </select>
-                </label>
-              </div>
-            </header>
-            <ol class="timeline">
-              <li class="timeline__item">
-                <div class="timeline__time">今天 07:20</div>
-                <div class="timeline__content">
-                  <h4>自动训练 · MiniLM 微调</h4>
-                  <p>使用 48 条最新对话样本，意图准确率 +3%。</p>
-                  <button
-                    class="link"
-                    data-action="view-log"
-                    data-log-time="今天 07:20"
-                    data-log-title="自动训练 · MiniLM 微调"
-                    data-log-detail="本次训练覆盖 48 条纠错对话与 12 条主动任务记录，完成 4 轮微调并生成新的意图混淆矩阵。"
-                  >
-                    查看详情
-                  </button>
-                </div>
-              </li>
-              <li class="timeline__item">
-                <div class="timeline__time">昨天 21:10</div>
-                <div class="timeline__content">
-                  <h4>手动训练 · FastText 增量</h4>
-                  <p>同步 12 条纠错样本，关键词“会议纪要”加入向量库。</p>
-                </div>
-              </li>
-              <li class="timeline__item">
-                <div class="timeline__time">周二 18:05</div>
-                <div class="timeline__content">
-                  <h4>自动训练 · 情绪模型校准</h4>
-                  <p>情绪识别准确率提升 6%，新增“疲惫”状态权重。</p>
-                </div>
-              </li>
-            </ol>
           </section>
-        </section>
 
-        <section class="page" data-page="content" aria-labelledby="content-title">
-          <header class="page__header">
-            <div>
-              <h2 id="content-title">内容展示</h2>
-              <p class="page__subtitle">查看AI生成的扩展内容、笔记与附件</p>
+          <section class="screen" data-screen="learning" aria-label="本地持续学习页">
+            <div class="surface">
+              <header class="surface__header">
+                <div>
+                  <h2>本地持续学习流程</h2>
+                  <p>结合训练数据、复盘与调优动作的流程草图。</p>
+                </div>
+                <button class="ghost" data-open-dialog="learning">查看详情</button>
+              </header>
+              <div class="grid grid--learning">
+                <article class="panel">
+                  <h3>数据收集</h3>
+                  <div class="placeholder placeholder--rows"></div>
+                </article>
+                <article class="panel">
+                  <h3>模型自适应</h3>
+                  <div class="placeholder placeholder--rows"></div>
+                </article>
+                <article class="panel">
+                  <h3>效果验证</h3>
+                  <div class="placeholder placeholder--rows"></div>
+                </article>
+              </div>
             </div>
-            <div class="header-controls">
-              <button class="ghost" data-action="open-preview">全屏预览</button>
-              <button class="secondary" data-action="share-content">分享…</button>
-            </div>
-          </header>
-          <div class="content-gallery">
-            <article class="content-card is-active" data-content="schedule">
-              <header class="content-card__header">
-                <h3>今日日程概览</h3>
-                <span class="tag">来自 Ni · 2 分钟前</span>
-              </header>
-              <div class="content-card__body">
-                <ul class="schedule-list">
-                  <li>
-                    <span>09:00</span>
-                    团队例会
-                  </li>
-                  <li>
-                    <span>15:00</span>
-                    客户沟通 · 已设置提醒
-                  </li>
-                  <li>
-                    <span>19:30</span>
-                    放松呼吸练习
-                  </li>
-                </ul>
-              </div>
-              <div class="content-card__detail" data-detail="schedule" hidden>
-                <p>
-                  详细日程包括会议地点、参与人和会前准备事项。你可以同步到日历、共享给团队或标记重点。
-                </p>
-                <ul class="detail-list">
-                  <li>会议室：3F 创新会议室 · 14:45 入场</li>
-                  <li>参会人：产品组、销售负责人</li>
-                  <li>准备项：季度汇报材料、最新指标快照</li>
-                </ul>
-              </div>
-              <footer class="content-card__footer">
-                <button class="link" data-action="open-detail" data-detail-target="schedule">展开</button>
-                <button
-                  class="ghost"
-                  data-action="pin-chat"
-                  data-chat-source="今日日程概览"
-                  data-chat-message="我已将今日日程同步到聊天窗口，包含会议时间、地点以及准备事项，记得查收。"
-                >
-                  发送到聊天
-                </button>
-              </footer>
-            </article>
-            <article class="content-card" data-content="note">
-              <header class="content-card__header">
-                <h3>会议纪要草稿</h3>
-                <span class="tag">本地文稿 · 草稿</span>
-              </header>
-              <div class="content-card__body">
-                <p>
-                  Ni 为你整理了会议纪要大纲，可在此处进一步编辑，并同步到知识库。
-                </p>
-              </div>
-              <footer class="content-card__footer">
-                <button class="link">编辑</button>
-                <button class="ghost">导出</button>
-              </footer>
-            </article>
-            <article class="content-card" data-content="wellness">
-              <header class="content-card__header">
-                <h3>放松练习引导</h3>
-                <span class="tag tag--calm">情绪关怀</span>
-              </header>
-              <div class="content-card__body">
-                <p>检测到疲惫情绪，建议尝试 5 分钟呼吸练习，以下是步骤指南。</p>
-              </div>
-              <footer class="content-card__footer">
-                <button class="link">播放语音</button>
-                <button class="ghost">标记已完成</button>
-              </footer>
-            </article>
-          </div>
-        </section>
+          </section>
 
-        <section class="page" data-page="tray" aria-labelledby="tray-title">
-          <header class="page__header">
-            <div>
-              <h2 id="tray-title">系统托盘与快速控制</h2>
-              <p class="page__subtitle">模拟常驻托盘菜单，用于快速唤醒、模式切换与状态查看</p>
-            </div>
-            <div class="header-controls">
-              <div class="status-chip status-chip--offline">
-                <span class="status-dot" aria-hidden="true"></span>
-                离线模式</div>
-            </div>
-          </header>
-          <div class="tray-simulator">
-            <section class="tray-card">
-              <header class="tray-card__header">
-                <h3>托盘菜单</h3>
-                <p>单击图标快速展开菜单，长按可进入设置。</p>
+          <section class="screen" data-screen="content" aria-label="内容展示页">
+            <div class="surface">
+              <header class="surface__header">
+                <div>
+                  <h2>内容展示与提醒看板</h2>
+                  <p>左侧为动态推荐位，右侧为日程与洞察。</p>
+                </div>
+                <button class="ghost" data-open-dialog="content">查看布局说明</button>
               </header>
-              <nav class="tray-menu" aria-label="托盘快捷菜单">
-                <button class="tray-menu__item">
-                  <span aria-hidden="true">💤</span>
-                  打盹模式
-                  <span class="tray-menu__hint">暂停 30 分钟</span>
-                </button>
-                <button class="tray-menu__item">
-                  <span aria-hidden="true">🎧</span>
-                  聆听中
-                  <span class="tray-menu__hint">语音唤醒开启</span>
-                </button>
-                <button class="tray-menu__item">
-                  <span aria-hidden="true">🔄</span>
-                  切换离线/在线
-                  <span class="tray-menu__hint">当前：离线</span>
-                </button>
-                <button class="tray-menu__item">
-                  <span aria-hidden="true">🧠</span>
-                  查看学习进度
-                </button>
-                <button class="tray-menu__item tray-menu__item--danger">
-                  <span aria-hidden="true">⏻</span>
-                  退出程序
-                </button>
-              </nav>
-            </section>
-            <section class="tray-card">
-              <header class="tray-card__header">
-                <h3>状态提示总览</h3>
-                <p>在系统托盘和通知中心同步显示。</p>
-              </header>
-              <ul class="status-board">
-                <li>
-                  <span class="status-pill status-pill--listening">聆听中</span>
-                  <span>麦克风热词捕捉激活</span>
-                </li>
-                <li>
-                  <span class="status-pill status-pill--thinking">思考中</span>
-                  <span>正在整理响应</span>
-                </li>
-                <li>
-                  <span class="status-pill status-pill--calm">情绪舒缓建议</span>
-                  <span>检测到疲惫情绪</span>
-                </li>
-                <li>
-                  <span class="status-pill status-pill--offline">离线模式</span>
-                  <span>云服务暂不可用</span>
-                </li>
-              </ul>
-            </section>
-          </div>
-        </section>
-      </main>
-    </div>
+              <div class="surface__body surface__body--split">
+                <div class="content-board">
+                  <div class="content-board__card">
+                    <h3>推荐卡片</h3>
+                    <div class="placeholder placeholder--tile"></div>
+                  </div>
+                  <div class="content-board__card">
+                    <h3>推送列表</h3>
+                    <div class="placeholder placeholder--rows"></div>
+                  </div>
+                </div>
+                <aside class="content-side">
+                  <section class="panel">
+                    <h3>今日事项</h3>
+                    <ul class="context__list">
+                      <li>上午：复盘用户情绪波动记录</li>
+                      <li>下午：联调第三方提醒服务</li>
+                      <li>晚上：推送次日陪伴主题</li>
+                    </ul>
+                  </section>
+                  <section class="panel">
+                    <h3>洞察摘要</h3>
+                    <div class="placeholder placeholder--rows"></div>
+                  </section>
+                </aside>
+              </div>
+            </div>
+          </section>
 
-    <div class="preview-overlay" aria-hidden="true" role="dialog" aria-modal="true">
-      <div class="preview">
-        <header class="preview__header">
-          <h3 data-preview-title>内容全屏预览</h3>
-          <button class="ghost" data-action="close-preview" aria-label="关闭预览">✕</button>
-        </header>
-        <article class="preview__body" data-preview-body>
-          <h4>今日日程概览</h4>
-          <p>
-            详细日程、附件与跳转链接将在此处呈现。此处仅提供结构示意，真实数据由后台填充。
-          </p>
-        </article>
+          <section class="screen" data-screen="settings" aria-label="设置中心骨架">
+            <div class="surface">
+              <header class="surface__header">
+                <div>
+                  <h2>设置与系统配置</h2>
+                  <p>展示待实现的配置项分区。</p>
+                </div>
+                <button class="ghost" data-open-dialog="settings">打开说明</button>
+              </header>
+              <div class="settings-grid">
+                <article class="panel">
+                  <h3>语音与情绪</h3>
+                  <div class="placeholder placeholder--rows"></div>
+                </article>
+                <article class="panel">
+                  <h3>任务调度</h3>
+                  <div class="placeholder placeholder--rows"></div>
+                </article>
+                <article class="panel">
+                  <h3>网络与隐私</h3>
+                  <div class="placeholder placeholder--rows"></div>
+                </article>
+              </div>
+            </div>
+          </section>
+        </main>
       </div>
     </div>
 
-    <div class="toast-region" aria-live="polite" aria-atomic="true"></div>
+    <section class="dialog" data-dialog hidden aria-modal="true" role="dialog">
+      <div class="dialog__body" role="document">
+        <header class="dialog__header">
+          <h2 data-dialog-title>弹窗标题</h2>
+          <button class="ghost" data-dialog-close aria-label="关闭弹窗">✕</button>
+        </header>
+        <div class="dialog__content" data-dialog-content>
+          <p>用于解释各模块的说明文本。</p>
+        </div>
+        <footer class="dialog__footer">
+          <button class="primary" data-dialog-close>知道了</button>
+        </footer>
+      </div>
+    </section>
 
-    <script src="app.js"></script>
+    <div class="toast-region" data-toast-region aria-live="polite" aria-atomic="false"></div>
+
+    <script src="app.js" defer></script>
   </body>
 </html>
-
-
